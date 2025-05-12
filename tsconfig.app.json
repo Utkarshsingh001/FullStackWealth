@@ -20,5 +20,11 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "tsxbackup/Assettsx/AssetCard.tsx", "tsxbackup/Assettsx/AssetForm.tsx", "tsxbackup/Assettsx/AssetSummary.tsx"]
+  "include": [
+    "src",
+    "tsxbackup/Assettsx/AssetCard.tsx",
+    "tsxbackup/Assettsx/AssetForm.tsx",
+    "tsxbackup/Assettsx/AssetSummary.tsx",
+    "tsxbackup/index.ts"
+  ]
 }
