@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Plus, Filter, BarChart3, AlertCircle } from 'lucide-react';
-import { useLiabilities } from '../context/LiabilityContext';
-import LiabilityCard from './LiabilityCard';
-import LiabilityForm from './LiabilityForm';
-import LiabilitySummary from './LiabilitySummary';
+import { useLiabilities } from '../../context/LiabilityContext';
+import LiabilityCard from '../../components/LiabilityCard';
+import LiabilityForm from '../../components/LiabilityForm';
+import LiabilitySummary from '../../components/LiabilitySummary';
 
 const LiabilityDashboard = () => {
   const { 

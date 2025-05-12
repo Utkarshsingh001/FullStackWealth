@@ -1,30 +1,35 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Layout from './components/Layout';
-import Dashboard from './components/Dashboard';
-import AssetDashboard from './components/AssetDashboard';
-import LiabilityDashboard from './components/LiabilityDashboard';
-import GoalsDashboard from './components/GoalsDashboard';
-import GlobalRules from './components/GlobalRules';
-import { AssetProvider } from './context/AssetContext';
-import { LiabilityProvider } from './context/LiabilityContext';
-import { GlobalRulesProvider } from './context/GlobalRulesContext';
-import { GoalsProvider } from './context/GoalsContext';
-import { ThemeProvider } from './context/ThemeContext';
-import Login from './components/auth/Login';
-import Register from './components/auth/Register';
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import Layout from "./components/Layout";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import AssetDashboard from "./pages/Assets/AssetDashboard";
+import LiabilityDashboard from "./pages/Liabilities/LiabilityDashboard";
+import GoalsDashboard from "./components/GoalsDashboard";
+import GlobalRules from "./components/GlobalRules";
+import { AssetProvider } from "./context/AssetContext";
+import { LiabilityProvider } from "./context/LiabilityContext";
+import { GlobalRulesProvider } from "./context/GlobalRulesContext";
+import { GoalsProvider } from "./context/GoalsContext";
+import { ThemeProvider } from "./context/ThemeContext";
+import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
 
   const handleLogin = () => {
-    console.log('Logging in...');
+    console.log("Logging in...");
     setIsAuthenticated(true);
   };
 
   const handleRegister = () => {
-    console.log('Registering...');
+    console.log("Registering...");
     setIsRegistered(true);
     setIsAuthenticated(true);
   };
@@ -37,31 +42,31 @@ function App() {
             <AssetProvider>
               <LiabilityProvider>
                 <Routes>
-                  <Route 
-                    path="/" 
-                    element={<Navigate to="/dashboard" replace />} 
+                  <Route
+                    path="/"
+                    element={<Navigate to="/dashboard" replace />}
                   />
 
-                  <Route 
-                    path="/login" 
+                  <Route
+                    path="/login"
                     element={
                       isAuthenticated ? (
                         <Navigate to="/dashboard" replace />
                       ) : (
                         <Login onLogin={handleLogin} />
                       )
-                    } 
+                    }
                   />
-                  
-                  <Route 
-                    path="/register" 
+
+                  <Route
+                    path="/register"
                     element={
                       isAuthenticated ? (
                         <Navigate to="/dashboard" replace />
                       ) : (
                         <Register onRegister={handleRegister} />
                       )
-                    } 
+                    }
                   />
 
                   <Route
@@ -72,7 +77,10 @@ function App() {
                           <Dashboard />
                         </Layout>
                       ) : (
-                        <Navigate to={isRegistered ? "/login" : "/register"} replace />
+                        <Navigate
+                          to={isRegistered ? "/login" : "/register"}
+                          replace
+                        />
                       )
                     }
                   />
@@ -130,7 +138,7 @@ function App() {
                   />
 
                   {/* Placeholder routes for other sections */}
-                  {['/beneficiary', '/transfer'].map(path => (
+                  {["/beneficiary", "/transfer"].map((path) => (
                     <Route
                       key={path}
                       path={path}
