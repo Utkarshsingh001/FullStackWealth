@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
-import { useGlobalRules } from '../context/GlobalRulesContext';
-import { Settings, Plus, AlertCircle, Check, X, Edit } from 'lucide-react';
+import React, { useState } from "react";
+import { useGlobalRules } from "../../context/GlobalRulesContext";
+import { Settings, Plus, AlertCircle, Check, X, Edit } from "lucide-react";
 
 const GlobalRules = () => {
-  const { 
-    rules, 
-    addRule, 
-    updateRule, 
+  const {
+    rules,
+    addRule,
+    updateRule,
     deleteRule,
     getInflationRate,
     getSalaryGrowthRate,
     getMarketReturnRate,
     updateSystemRule,
     salary,
-    updateSalary
+    updateSalary,
   } = useGlobalRules();
 
   const [isAdding, setIsAdding] = useState(false);
@@ -21,24 +21,24 @@ const GlobalRules = () => {
   const [newSalary, setNewSalary] = useState(salary);
   const [editingRule, setEditingRule] = useState(null);
   const [newRule, setNewRule] = useState({
-    name: '',
-    type: 'custom',
-    value: '',
-    frequency: 'yearly',
-    description: '',
-    isActive: true
+    name: "",
+    type: "custom",
+    value: "",
+    frequency: "yearly",
+    description: "",
+    isActive: true,
   });
 
   const handleAddRule = () => {
     addRule(newRule);
     setIsAdding(false);
     setNewRule({
-      name: '',
-      type: 'custom',
-      value: '',
-      frequency: 'yearly',
-      description: '',
-      isActive: true
+      name: "",
+      type: "custom",
+      value: "",
+      frequency: "yearly",
+      description: "",
+      isActive: true,
     });
   };
 
@@ -48,9 +48,9 @@ const GlobalRules = () => {
   };
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
       maximumFractionDigits: 0,
     }).format(value);
   };
@@ -59,7 +59,9 @@ const GlobalRules = () => {
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-800 dark:text-white">Global Rules</h2>
+          <h2 className="text-2xl font-semibold text-slate-800 dark:text-white">
+            Global Rules
+          </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
             Manage global financial rules and assumptions
           </p>
@@ -80,7 +82,9 @@ const GlobalRules = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             <Settings className="h-5 w-5 text-slate-500 dark:text-slate-400" />
-            <h3 className="text-lg font-medium text-slate-800 dark:text-white">Monthly Salary</h3>
+            <h3 className="text-lg font-medium text-slate-800 dark:text-white">
+              Monthly Salary
+            </h3>
           </div>
           {!editingSalary && (
             <button
@@ -144,15 +148,32 @@ const GlobalRules = () => {
       <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-5 border border-gray-200 dark:border-slate-700">
         <div className="flex items-center gap-2 mb-4">
           <Settings className="h-5 w-5 text-slate-500 dark:text-slate-400" />
-          <h3 className="text-lg font-medium text-slate-800 dark:text-white">System Rules</h3>
+          <h3 className="text-lg font-medium text-slate-800 dark:text-white">
+            System Rules
+          </h3>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
-            { id: 'inflation', name: 'Inflation Rate', value: getInflationRate() },
-            { id: 'salary', name: 'Salary Growth', value: getSalaryGrowthRate() },
-            { id: 'market', name: 'Market Returns', value: getMarketReturnRate() }
+            {
+              id: "inflation",
+              name: "Inflation Rate",
+              value: getInflationRate(),
+            },
+            {
+              id: "salary",
+              name: "Salary Growth",
+              value: getSalaryGrowthRate(),
+            },
+            {
+              id: "market",
+              name: "Market Returns",
+              value: getMarketReturnRate(),
+            },
           ].map((rule) => (
-            <div key={rule.id} className="p-4 rounded-lg bg-gray-50 dark:bg-slate-700/50">
+            <div
+              key={rule.id}
+              className="p-4 rounded-lg bg-gray-50 dark:bg-slate-700/50"
+            >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                   {rule.name}
@@ -193,8 +214,10 @@ const GlobalRules = () => {
                     type="number"
                     value={rule.value}
                     onChange={(e) => {
-                      const newRules = rules.map(r => 
-                        r.id === rule.id ? { ...r, value: parseFloat(e.target.value) } : r
+                      const newRules = rules.map((r) =>
+                        r.id === rule.id
+                          ? { ...r, value: parseFloat(e.target.value) }
+                          : r
                       );
                       updateSystemRule(rule.id, parseFloat(e.target.value));
                     }}
@@ -218,7 +241,9 @@ const GlobalRules = () => {
       {/* Custom Rules */}
       <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700">
         <div className="p-5 border-b border-slate-200 dark:border-slate-700">
-          <h3 className="text-lg font-medium text-slate-800 dark:text-white">Custom Rules</h3>
+          <h3 className="text-lg font-medium text-slate-800 dark:text-white">
+            Custom Rules
+          </h3>
         </div>
 
         {isAdding && (
@@ -232,7 +257,9 @@ const GlobalRules = () => {
                   <input
                     type="text"
                     value={newRule.name}
-                    onChange={(e) => setNewRule(prev => ({ ...prev, name: e.target.value }))}
+                    onChange={(e) =>
+                      setNewRule((prev) => ({ ...prev, name: e.target.value }))
+                    }
                     className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
                       bg-white dark:bg-slate-700 text-slate-900 dark:text-white
                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -247,7 +274,9 @@ const GlobalRules = () => {
                   <input
                     type="number"
                     value={newRule.value}
-                    onChange={(e) => setNewRule(prev => ({ ...prev, value: e.target.value }))}
+                    onChange={(e) =>
+                      setNewRule((prev) => ({ ...prev, value: e.target.value }))
+                    }
                     className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
                       bg-white dark:bg-slate-700 text-slate-900 dark:text-white
                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -263,7 +292,12 @@ const GlobalRules = () => {
                 <input
                   type="text"
                   value={newRule.description}
-                  onChange={(e) => setNewRule(prev => ({ ...prev, description: e.target.value }))}
+                  onChange={(e) =>
+                    setNewRule((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
                   className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
                     bg-white dark:bg-slate-700 text-slate-900 dark:text-white
                     focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -293,49 +327,58 @@ const GlobalRules = () => {
         )}
 
         <div className="divide-y divide-slate-200 dark:divide-slate-700">
-          {rules.filter(rule => rule.type === 'custom').map((rule) => (
-            <div key={rule.id} className="p-5">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-sm font-medium text-slate-800 dark:text-white">{rule.name}</h4>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">{rule.description}</p>
-                </div>
-                <div className="flex items-center gap-4">
-                  <span className="text-lg font-semibold text-slate-800 dark:text-white">
-                    {rule.value}%
-                  </span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => updateRule(rule.id, { isActive: !rule.isActive })}
-                      className={`p-1.5 rounded-full transition-colors ${
-                        rule.isActive
-                          ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400'
-                          : 'bg-slate-100 text-slate-400 dark:bg-slate-700 dark:text-slate-500'
-                      }`}
-                    >
-                      <Check className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => deleteRule(rule.id)}
-                      className="p-1.5 rounded-full text-slate-400 hover:text-red-600 dark:hover:text-red-400
+          {rules
+            .filter((rule) => rule.type === "custom")
+            .map((rule) => (
+              <div key={rule.id} className="p-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="text-sm font-medium text-slate-800 dark:text-white">
+                      {rule.name}
+                    </h4>
+                    <p className="text-sm text-slate-500 dark:text-slate-400">
+                      {rule.description}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <span className="text-lg font-semibold text-slate-800 dark:text-white">
+                      {rule.value}%
+                    </span>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() =>
+                          updateRule(rule.id, { isActive: !rule.isActive })
+                        }
+                        className={`p-1.5 rounded-full transition-colors ${
+                          rule.isActive
+                            ? "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                            : "bg-slate-100 text-slate-400 dark:bg-slate-700 dark:text-slate-500"
+                        }`}
+                      >
+                        <Check className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => deleteRule(rule.id)}
+                        className="p-1.5 rounded-full text-slate-400 hover:text-red-600 dark:hover:text-red-400
                         hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-          {rules.filter(rule => rule.type === 'custom').length === 0 && !isAdding && (
-            <div className="p-8 text-center">
-              <AlertCircle className="h-8 w-8 text-slate-400 mx-auto mb-3" />
-              <p className="text-slate-500 dark:text-slate-400">
-                No custom rules found. Add your first rule to get started.
-              </p>
-            </div>
-          )}
+          {rules.filter((rule) => rule.type === "custom").length === 0 &&
+            !isAdding && (
+              <div className="p-8 text-center">
+                <AlertCircle className="h-8 w-8 text-slate-400 mx-auto mb-3" />
+                <p className="text-slate-500 dark:text-slate-400">
+                  No custom rules found. Add your first rule to get started.
+                </p>
+              </div>
+            )}
         </div>
       </div>
     </div>
