@@ -2,7 +2,7 @@ import React from "react";
 import { useAssets } from "../../context/AssetContext";
 import { useLiabilities } from "../../context/LiabilityContext";
 import AssetCard from "../../components/assets/AssetCard";
-import LiabilityCard from "../../components/LiabilityCard";
+import LiabilityCard from "../../components/liabilities/LiabilityCard";
 import PerformanceCharts from "../../components/PerformanceCharts";
 import {
   TrendingUp,

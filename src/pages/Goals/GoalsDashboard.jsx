@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
-import { Plus, Filter, Target, TrendingUp, Calendar, AlertCircle } from 'lucide-react';
-import { useGoals } from '../context/GoalsContext';
-import { useGlobalRules } from '../context/GlobalRulesContext';
-import GoalCard from './GoalCard';
-import GoalForm from './GoalForm';
-import GoalSummary from './GoalSummary';
-import GoalProjections from './GoalProjections';
+import React, { useState } from "react";
+import {
+  Plus,
+  Filter,
+  Target,
+  TrendingUp,
+  Calendar,
+  AlertCircle,
+} from "lucide-react";
+import { useGoals } from "../../context/GoalsContext";
+import { useGlobalRules } from "../../context/GlobalRulesContext";
+import GoalCard from "../../components/goals/GoalCard";
+import GoalForm from "../../components/goals/GoalForm";
+import GoalSummary from "../../components/goals/GoalSummary";
+import GoalProjections from "../../components/goals/GoalProjections";
 
 const GoalsDashboard = () => {
-  const { 
+  const {
     goals,
     addGoal,
     updateGoal,
     deleteGoal,
     calculateProgress,
     calculateMonthlyRequirement,
-    isGoalAchievable
+    isGoalAchievable,
   } = useGoals();
 
-  const {
-    rules,
-    getInflationRate,
-    getSalaryGrowthRate,
-    getMarketReturnRate
-  } = useGlobalRules();
+  const { rules, getInflationRate, getSalaryGrowthRate, getMarketReturnRate } =
+    useGlobalRules();
 
   const [isAdding, setIsAdding] = useState(false);
   const [activeFilter, setActiveFilter] = useState(null);
@@ -33,24 +36,24 @@ const GoalsDashboard = () => {
     setIsAdding(true);
   };
 
-  const filteredGoals = activeFilter 
-    ? goals.filter(goal => goal.category === activeFilter)
+  const filteredGoals = activeFilter
+    ? goals.filter((goal) => goal.category === activeFilter)
     : goals;
 
   const categories = [
-    'retirement',
-    'education',
-    'house',
-    'car',
-    'travel',
-    'emergency',
-    'other'
+    "retirement",
+    "education",
+    "house",
+    "car",
+    "travel",
+    "emergency",
+    "other",
   ];
 
   const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
       maximumFractionDigits: 0,
     }).format(value);
   };
@@ -71,7 +74,9 @@ const GoalsDashboard = () => {
     <div className="space-y-6 animate-fadeIn">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-semibold text-slate-800 dark:text-white">Financial Goals</h2>
+          <h2 className="text-2xl font-semibold text-slate-800 dark:text-white">
+            Financial Goals
+          </h2>
           <p className="text-slate-500 dark:text-slate-400 mt-1">
             Track and manage your financial objectives
           </p>
@@ -90,9 +95,9 @@ const GoalsDashboard = () => {
               <button
                 onClick={() => setActiveFilter(null)}
                 className={`px-3 py-2 text-sm rounded-md border transition-colors ${
-                  !activeFilter 
-                    ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800' 
-                    : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600'
+                  !activeFilter
+                    ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800"
+                    : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600"
                 }`}
               >
                 <Filter className="h-4 w-4" />
@@ -111,7 +116,7 @@ const GoalsDashboard = () => {
         </div>
       </div>
 
-      <GoalSummary 
+      <GoalSummary
         totalGoalAmount={getTotalGoalAmount()}
         totalCurrentAmount={getTotalCurrentAmount()}
         totalMonthlyContribution={getTotalMonthlyContribution()}
@@ -121,10 +126,12 @@ const GoalsDashboard = () => {
 
       {showRules && (
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm p-5 border border-slate-200 dark:border-slate-700">
-          <h3 className="text-lg font-medium text-slate-800 dark:text-white mb-4">Global Rules</h3>
+          <h3 className="text-lg font-medium text-slate-800 dark:text-white mb-4">
+            Global Rules
+          </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {rules.map(rule => (
-              <div 
+            {rules.map((rule) => (
+              <div
                 key={rule.id}
                 className="p-4 rounded-lg bg-slate-50 dark:bg-slate-700/50"
               >
@@ -132,12 +139,14 @@ const GoalsDashboard = () => {
                   <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
                     {rule.name}
                   </span>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${
-                    rule.isActive
-                      ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
-                      : 'bg-slate-100 text-slate-600 dark:bg-slate-600 dark:text-slate-400'
-                  }`}>
-                    {rule.isActive ? 'Active' : 'Inactive'}
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full ${
+                      rule.isActive
+                        ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                        : "bg-slate-100 text-slate-600 dark:bg-slate-600 dark:text-slate-400"
+                    }`}
+                  >
+                    {rule.isActive ? "Active" : "Inactive"}
                   </span>
                 </div>
                 <div className="flex items-end justify-between">
@@ -165,20 +174,20 @@ const GoalsDashboard = () => {
             onClick={() => setActiveFilter(null)}
             className={`px-3 py-1.5 text-sm rounded-full whitespace-nowrap transition-colors ${
               !activeFilter
-                ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200' 
-                : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600'
+                ? "bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200"
+                : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600"
             }`}
           >
             All Goals
           </button>
-          {categories.map(category => (
+          {categories.map((category) => (
             <button
               key={category}
               onClick={() => setActiveFilter(category)}
               className={`px-3 py-1.5 text-sm rounded-full whitespace-nowrap capitalize transition-colors ${
                 activeFilter === category
-                  ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200' 
-                  : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600'
+                  ? "bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200"
+                  : "bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600"
               }`}
             >
               {category}
@@ -189,7 +198,7 @@ const GoalsDashboard = () => {
 
       {isAdding && (
         <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-slate-200 dark:border-slate-700 animate-slideDown">
-          <GoalForm 
+          <GoalForm
             onCancel={() => setIsAdding(false)}
             onSave={(goal) => {
               addGoal(goal);
@@ -201,7 +210,7 @@ const GoalsDashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredGoals.map((goal) => (
-          <GoalCard 
+          <GoalCard
             key={goal.id}
             goal={goal}
             onUpdate={updateGoal}
@@ -211,7 +220,7 @@ const GoalsDashboard = () => {
             isAchievable={isGoalAchievable(goal)}
           />
         ))}
-        
+
         {filteredGoals.length === 0 && (
           <div className="col-span-full bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 p-8 text-center">
             <div className="flex justify-center mb-4">
