@@ -641,11 +641,11 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
       )}
 
       <div
+        className={`asset-card-details ${isExpanded ? "expanded" : ""}`}
         style={{
           maxHeight: isExpanded ? "2000px" : "0",
-          opacity: isExpanded ? 1 : 0,
           overflow: "hidden",
-          transition: "max-height 0.3s ease-in-out, opacity 0.3s ease-in-out",
+          transition: "max-height 0.3s ease-in-out",
         }}
       >
         {!compact && (

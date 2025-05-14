@@ -66,7 +66,15 @@
   isolation: isolate;
 }
 
-/* Remove the asset-card-details class styles since we're handling it inline */
+.asset-card-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.asset-card-details.expanded {
+  max-height: 1000px;
+}
 
 /* Placeholder styling */
 input::placeholder, textarea::placeholder {
