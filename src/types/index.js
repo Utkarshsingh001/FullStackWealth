@@ -1,4 +1,5 @@
 export const assetTypes = [
+  'Bank Account',
   'FD',
   'Mutual Fund',
   'Stocks',
@@ -19,7 +20,7 @@ export const liabilityTypes = [
 
 export const defaultAsset = {
   name: "",
-  type: "FD",
+  type: "Bank Account",
   value: "",
   purchaseDate: "",
   maturityDate: "",
@@ -31,6 +32,8 @@ export const defaultAsset = {
   source: "",
   isActive: true,
   bankName: "",
+  accountType: "Savings",
+  interestRate: "",
   compoundingFrequency: "yearly",
   autoRenewal: false,
   isTaxSaver: false,
