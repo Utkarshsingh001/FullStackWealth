@@ -90,10 +90,6 @@ export const defaultLiability = {
   disbursementDate: "",
   emiStartDate: "",
   loanMaturityDate: "",
-  originalPrincipal: "",
-  startDate: "",
-  interestType: "reducing", // 'reducing' or 'flat'
-  prepayments: [],
   localRule: {
     type: "no_rule",
     changeRate: "",
