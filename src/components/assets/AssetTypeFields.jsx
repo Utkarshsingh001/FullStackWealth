@@ -105,6 +105,222 @@ const AssetTypeFields = ({ asset, index, onChange }) => {
         </div>
       )}
 
+      {/* FD Fields */}
+      {asset.type === "FD" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor={`bankName-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                Bank/Institution Name
+              </label>
+              <input
+                id={`bankName-${index}`}
+                type="text"
+                value={asset.bankName}
+                onChange={(e) => onChange("bankName", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+                placeholder="e.g., HDFC Bank"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor={`fdType-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                FD Type
+              </label>
+              <select
+                id={`fdType-${index}`}
+                value={asset.fdType}
+                onChange={(e) => onChange("fdType", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm 
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+              >
+                <option value="lumpsum">Lump Sum</option>
+                <option value="recurring">Recurring Deposit</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {asset.fdType === "recurring" ? (
+              <div>
+                <label
+                  htmlFor={`installmentAmount-${index}`}
+                  className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+                >
+                  Monthly Installment
+                </label>
+                <input
+                  id={`installmentAmount-${index}`}
+                  type="number"
+                  value={asset.installmentAmount}
+                  onChange={(e) => onChange("installmentAmount", e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
+                    bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400
+                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                    transition duration-200"
+                  placeholder="e.g., 5000"
+                />
+              </div>
+            ) : (
+              <div>
+                <label
+                  htmlFor={`value-${index}`}
+                  className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+                >
+                  Principal Amount
+                </label>
+                <input
+                  id={`value-${index}`}
+                  type="number"
+                  value={asset.value}
+                  onChange={(e) => onChange("value", e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
+                    bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400
+                    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                    transition duration-200"
+                  placeholder="e.g., 100000"
+                />
+              </div>
+            )}
+
+            <div>
+              <label
+                htmlFor={`interestRate-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                Interest Rate (% p.a.)
+              </label>
+              <input
+                id={`interestRate-${index}`}
+                type="number"
+                step="0.01"
+                value={asset.interestRate}
+                onChange={(e) => onChange("interestRate", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+                placeholder="e.g., 7.5"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor={`fdTenure-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                Tenure
+              </label>
+              <input
+                id={`fdTenure-${index}`}
+                type="text"
+                value={asset.fdTenure}
+                onChange={(e) => onChange("fdTenure", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+                placeholder="e.g., 2 years"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor={`interestPayout-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                Interest Payout
+              </label>
+              <select
+                id={`interestPayout-${index}`}
+                value={asset.interestPayout}
+                onChange={(e) => onChange("interestPayout", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm 
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+              >
+                <option value="cumulative">Cumulative (At Maturity)</option>
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="annually">Annually</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor={`interestReceived-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                Interest Received
+              </label>
+              <input
+                id={`interestReceived-${index}`}
+                type="number"
+                value={asset.interestReceived}
+                onChange={(e) => onChange("interestReceived", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+                placeholder="e.g., 5000"
+              />
+            </div>
+
+            <div className="flex flex-col justify-end">
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <input
+                    id={`autoRenewal-${index}`}
+                    type="checkbox"
+                    checked={asset.autoRenewal}
+                    onChange={(e) => onChange("autoRenewal", e.target.checked)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-700"
+                  />
+                  <label
+                    htmlFor={`autoRenewal-${index}`}
+                    className="ml-2 text-sm text-slate-700 dark:text-slate-300"
+                  >
+                    Auto Renewal
+                  </label>
+                </div>
+
+                <div className="flex items-center">
+                  <input
+                    id={`isTaxSaver-${index}`}
+                    type="checkbox"
+                    checked={asset.isTaxSaver}
+                    onChange={(e) => onChange("isTaxSaver", e.target.checked)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-700"
+                  />
+                  <label
+                    htmlFor={`isTaxSaver-${index}`}
+                    className="ml-2 text-sm text-slate-700 dark:text-slate-300"
+                  >
+                    Tax Saver FD
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mutual Fund Fields */}
       {asset.type === "Mutual Fund" && (
         <div className="space-y-4">
@@ -184,109 +400,6 @@ const AssetTypeFields = ({ asset, index, onChange }) => {
                 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500
                 dark:bg-slate-700 dark:text-white transition duration-200"
               placeholder="e.g., 120000"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* FD Fields */}
-      {asset.type === "FD" && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label
-                htmlFor={`bankName-${index}`}
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
-              >
-                Bank/Institution Name
-              </label>
-              <input
-                id={`bankName-${index}`}
-                type="text"
-                value={asset.bankName}
-                onChange={(e) => onChange("bankName", e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
-                  focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500
-                  dark:bg-slate-700 dark:text-white transition duration-200"
-                placeholder="e.g., HDFC Bank"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor={`compoundingFrequency-${index}`}
-                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
-              >
-                Compounding Frequency
-              </label>
-              <select
-                id={`compoundingFrequency-${index}`}
-                value={asset.compoundingFrequency}
-                onChange={(e) =>
-                  onChange("compoundingFrequency", e.target.value)
-                }
-                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm 
-                  focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500
-                  dark:bg-slate-700 dark:text-white transition duration-200"
-              >
-                <option value="monthly">Monthly</option>
-                <option value="quarterly">Quarterly</option>
-                <option value="half-yearly">Half-Yearly</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-4 items-center">
-            <div className="flex items-center">
-              <input
-                id={`autoRenewal-${index}`}
-                type="checkbox"
-                checked={asset.autoRenewal}
-                onChange={(e) => onChange("autoRenewal", e.target.checked)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-700"
-              />
-              <label
-                htmlFor={`autoRenewal-${index}`}
-                className="ml-2 text-sm text-slate-700 dark:text-slate-300"
-              >
-                Auto Renewal
-              </label>
-            </div>
-
-            <div className="flex items-center">
-              <input
-                id={`isTaxSaver-${index}`}
-                type="checkbox"
-                checked={asset.isTaxSaver}
-                onChange={(e) => onChange("isTaxSaver", e.target.checked)}
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 rounded border-slate-300 dark:border-slate-600 dark:bg-slate-700"
-              />
-              <label
-                htmlFor={`isTaxSaver-${index}`}
-                className="ml-2 text-sm text-slate-700 dark:text-slate-300"
-              >
-                Tax Saver FD
-              </label>
-            </div>
-          </div>
-
-          <div>
-            <label
-              htmlFor={`value-${index}`}
-              className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
-            >
-              FD Maturity Value (₹)
-            </label>
-            <input
-              id={`value-${index}`}
-              type="number"
-              value={asset.value}
-              onChange={(e) => onChange("value", e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
-                focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500
-                dark:bg-slate-700 dark:text-white transition duration-200"
-              placeholder="e.g., 105000"
             />
           </div>
         </div>
