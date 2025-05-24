@@ -50,34 +50,68 @@ export const AssetProvider = ({ children }) => {
       return updated;
     });
   };
+
+  const convertToCash = (index) => {
+    setAssets(prevAssets => {
+      const updated = [...prevAssets];
+      const asset = updated[index];
+      const currentValue = getAssetValue(asset);
+      
+      // Find bank account or create one if it doesn't exist
+      let bankAccountIndex = updated.findIndex(a => a.type === 'Bank Account');
+      if (bankAccountIndex === -1) {
+        updated.push({
+          ...defaultAsset,
+          name: 'Primary Bank Account',
+          type: 'Bank Account',
+          value: '0'
+        });
+        bankAccountIndex = updated.length - 1;
+      }
+
+      // Update bank account value
+      updated[bankAccountIndex] = {
+        ...updated[bankAccountIndex],
+        value: (Number(updated[bankAccountIndex].value) + currentValue).toString()
+      };
+
+      // Mark asset as liquidated
+      updated[index] = {
+        ...asset,
+        isLiquidated: true,
+        liquidatedValue: currentValue.toString(),
+        liquidatedDate: new Date().toISOString()
+      };
+
+      return updated;
+    });
+  };
+  
+  const getAssetValue = (asset) => {
+    switch (asset.type) {
+      case 'Stocks':
+        return Number(asset.units) * Number(asset.currentPrice) || 0;
+      case 'Crypto':
+        return Number(asset.cryptoUnits) * Number(asset.cryptoCurrentPrice) || 0;
+      case 'Gold':
+        return Number(asset.weight) * Number(asset.goldCurrentPrice) || 0;
+      case 'Property':
+        return Number(asset.marketValue) * (Number(asset.ownershipPercent) / 100) || 0;
+      default:
+        return Number(asset.value) || 0;
+    }
+  };
   
   const getTotalPortfolioValue = () => {
     return assets.reduce((total, asset) => {
-      let value = 0;
-      
-      switch (asset.type) {
-        case 'Stocks':
-          value = Number(asset.units) * Number(asset.currentPrice) || 0;
-          break;
-        case 'Crypto':
-          value = Number(asset.cryptoUnits) * Number(asset.cryptoCurrentPrice) || 0;
-          break;
-        case 'Gold':
-          value = Number(asset.weight) * Number(asset.goldCurrentPrice) || 0;
-          break;
-        case 'Property':
-          value = Number(asset.marketValue) * (Number(asset.ownershipPercent) / 100) || 0;
-          break;
-        default:
-          value = Number(asset.value) || 0;
-      }
-      
-      return total + value;
+      if (asset.isLiquidated) return total;
+      return total + getAssetValue(asset);
     }, 0);
   };
   
   const getTotalInvested = () => {
     return assets.reduce((total, asset) => {
+      if (asset.isLiquidated) return total;
       let invested = 0;
       
       switch (asset.type) {
@@ -116,6 +150,7 @@ export const AssetProvider = ({ children }) => {
         updateAsset,
         removeAsset,
         updateLocalRule,
+        convertToCash,
         getTotalPortfolioValue,
         getTotalInvested,
         getGainLoss
