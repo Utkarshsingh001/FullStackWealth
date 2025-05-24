@@ -19,13 +19,15 @@ import {
   Coins,
   Building,
   Wallet,
+  AlertCircle
 } from "lucide-react";
 import { useAssets } from "../../context/AssetContext";
 import AssetForm from "./AssetForm";
 
 const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
-  const { removeAsset } = useAssets();
+  const { removeAsset, convertToCash } = useAssets();
   const [editing, setEditing] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const formatCurrency = (value) => {
     const numValue = typeof value === "string" ? parseFloat(value) || 0 : value;
@@ -530,6 +532,15 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
     }
   };
 
+  const handleConvertToCash = () => {
+    if (showConfirmation) {
+      convertToCash(index);
+      setShowConfirmation(false);
+    } else {
+      setShowConfirmation(true);
+    }
+  };
+
   if (editing) {
     return (
       <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-slate-200 dark:border-slate-700 animate-fadeIn">
@@ -561,44 +572,53 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
               <h3 className="font-medium text-slate-800 dark:text-white">
                 {asset.name || `Unnamed ${asset.type}`}
               </h3>
-              <span
-                className={`text-xs ${color.bg} ${color.darkBg} ${color.text} ${color.darkText} px-2 py-0.5 rounded-full`}
-              >
-                {asset.type}
-              </span>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`text-xs ${color.bg} ${color.darkBg} ${color.text} ${color.darkText} px-2 py-0.5 rounded-full`}
+                >
+                  {asset.type}
+                </span>
+                {asset.isLiquidated && (
+                  <span className="text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full">
+                    Liquidated
+                  </span>
+                )}
+              </div>
             </div>
           </div>
           <div className="flex">
-            <button
-              onClick={() => setEditing(true)}
-              className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-            >
-              <Edit className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => removeAsset(index)}
-              className="p-1.5 text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
+            {!asset.isLiquidated && (
+              <>
+                <button
+                  onClick={() => setEditing(true)}
+                  className="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
+                >
+                  <Edit className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => removeAsset(index)}
+                  className="p-1.5 text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </>
+            )}
           </div>
         </div>
 
         <div className="mt-4 space-y-2">
           <div className="flex justify-between items-center">
             <span className="text-sm text-slate-500 dark:text-slate-400">
-              Current Value
+              {asset.isLiquidated ? "Liquidated Value" : "Current Value"}
             </span>
             <span className="font-semibold text-slate-800 dark:text-white">
-              {formatCurrency(assetValue)}
+              {formatCurrency(asset.isLiquidated ? asset.liquidatedValue : assetValue)}
             </span>
           </div>
 
-          {!compact && (
+          {!compact && !asset.isLiquidated && (
             <div className="flex justify-between items-center">
-              <span className="text-sm text-slate-500 dark:text-slate-400">
-                Gain/Loss
-              </span>
+              <span className="text-sm text-slate-500 dark:text-slate-400">Gain/Loss</span>
               <div className="flex items-center">
                 <span
                   className={`font-semibold ${
@@ -624,14 +644,14 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
           )}
         </div>
 
-        {!compact && asset.expectedReturn && (
+        {!compact && asset.expectedReturn && !asset.isLiquidated && (
           <div className="mt-3 flex items-center text-xs text-slate-500 dark:text-slate-400">
             <Percent className="h-3 w-3 mr-1" />
             <span>Expected: {asset.expectedReturn}% p.a.</span>
           </div>
         )}
 
-        {!compact && asset.linkedGoal && (
+        {!compact && asset.linkedGoal && !asset.isLiquidated && (
           <div className="mt-1 flex items-center text-xs text-slate-500 dark:text-slate-400">
             <Link className="h-3 w-3 mr-1" />
             <span>Goal: {asset.linkedGoal}</span>
@@ -642,13 +662,64 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
           <div className="mt-1 flex items-center text-xs text-slate-500 dark:text-slate-400">
             <Calendar className="h-3 w-3 mr-1" />
             <span>
-              Purchased: {new Date(asset.purchaseDate).toLocaleDateString()}
+              {asset.isLiquidated ? "Liquidated" : "Purchased"}:{" "}
+              {new Date(
+                asset.isLiquidated ? asset.liquidatedDate : asset.purchaseDate
+              ).toLocaleDateString()}
             </span>
+          </div>
+        )}
+
+        {!compact && !asset.isLiquidated && asset.type !== "Bank Account" && (
+          <div className="mt-4">
+            {showConfirmation ? (
+              <div className="space-y-3">
+                <div className="flex items-start gap-2 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md">
+                  <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-sm text-amber-800 dark:text-amber-300">
+                      Are you sure you want to convert this asset to cash?
+                    </p>
+                    <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">
+                      This action cannot be undone. The value will be added to your bank account.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowConfirmation(false)}
+                    className="flex-1 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300
+                      bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md
+                      hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConvertToCash}
+                    className="flex-1 px-3 py-1.5 text-sm font-medium text-white
+                      bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+                  >
+                    Confirm
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={handleConvertToCash}
+                className="w-full px-3 py-1.5 text-sm font-medium text-blue-700 bg-blue-50 
+                  dark:text-blue-300 dark:bg-blue-900/30 rounded-md 
+                  hover:bg-blue-100 dark:hover:bg-blue-800/40 transition-colors
+                  flex items-center justify-center gap-1.5"
+              >
+                <Wallet className="h-4 w-4" />
+                Convert to Cash
+              </button>
+            )}
           </div>
         )}
       </div>
 
-      {!compact && hasDetails() && (
+      {!compact && hasDetails() && !showConfirmation && (
         <div
           className="px-5 py-3 border-t border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800 
             flex justify-between items-center cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
@@ -665,36 +736,34 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
         </div>
       )}
 
-      <div className={`asset-card-details ${isExpanded ? "expanded" : ""}`}>
-        {!compact && isExpanded && (
-          <div className="p-5 border-t border-gray-200 dark:border-slate-700">
-            {renderAssetDetails()}
+      {!compact && isExpanded && !showConfirmation && (
+        <div className="p-5 border-t border-gray-200 dark:border-slate-700">
+          {renderAssetDetails()}
 
-            {asset.localRule?.type === "make_rule" && (
-              <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-md">
-                <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Custom Growth Rule
-                </h4>
-                <p className="text-xs text-slate-500 dark:text-slate-400">
-                  This asset grows at {asset.localRule.changeRate}%{" "}
-                  {asset.localRule.frequency}.
-                </p>
-              </div>
-            )}
+          {asset.localRule?.type === "make_rule" && !asset.isLiquidated && (
+            <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-md">
+              <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300">
+                Custom Growth Rule
+              </h4>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                This asset grows at {asset.localRule.changeRate}%{" "}
+                {asset.localRule.frequency}.
+              </p>
+            </div>
+          )}
 
-            {asset.notes && (
-              <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md">
-                <h4 className="text-sm font-medium text-amber-800 dark:text-amber-300">
-                  Notes
-                </h4>
-                <p className="text-xs text-amber-700 dark:text-amber-400">
-                  {asset.notes}
-                </p>
-              </div>
-            )}
-          </div>
-        )}
-      </div>
+          {asset.notes && (
+            <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/20 rounded-md">
+              <h4 className="text-sm font-medium text-amber-800 dark:text-amber-300">
+                Notes
+              </h4>
+              <p className="text-xs text-amber-700 dark:text-amber-400">
+                {asset.notes}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
