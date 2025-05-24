@@ -18,6 +18,7 @@ import {
   Home,
   Coins,
   Building,
+  Wallet,
 } from "lucide-react";
 import { useAssets } from "../../context/AssetContext";
 import AssetForm from "./AssetForm";
@@ -35,8 +36,35 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
     }).format(numValue);
   };
 
+  const getIcon = (type) => {
+    switch (type) {
+      case "Bank Account":
+        return <Wallet className="h-5 w-5" />;
+      case "FD":
+        return <CreditCard className="h-5 w-5" />;
+      case "Mutual Fund":
+        return <RefreshCw className="h-5 w-5" />;
+      case "Stocks":
+        return <ArrowUpRight className="h-5 w-5" />;
+      case "Gold":
+        return <Coins className="h-5 w-5" />;
+      case "Property":
+        return <Home className="h-5 w-5" />;
+      case "Crypto":
+        return <DollarSign className="h-5 w-5" />;
+      default:
+        return <FileText className="h-5 w-5" />;
+    }
+  };
+
   const getColor = (type) => {
     const colors = {
+      "Bank Account": {
+        bg: "bg-emerald-50",
+        text: "text-emerald-700",
+        darkBg: "dark:bg-emerald-900/30",
+        darkText: "dark:text-emerald-300",
+      },
       FD: {
         bg: "bg-blue-50",
         text: "text-blue-700",
@@ -80,27 +108,7 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
         darkText: "dark:text-gray-300",
       },
     };
-
     return colors[type] || colors["Other"];
-  };
-
-  const getAssetIcon = (type) => {
-    switch (type) {
-      case "FD":
-        return <CreditCard className="h-5 w-5" />;
-      case "Mutual Fund":
-        return <RefreshCw className="h-5 w-5" />;
-      case "Stocks":
-        return <ArrowUpRight className="h-5 w-5" />;
-      case "Gold":
-        return <Coins className="h-5 w-5" />;
-      case "Property":
-        return <Home className="h-5 w-5" />;
-      case "Crypto":
-        return <DollarSign className="h-5 w-5" />;
-      default:
-        return <FileText className="h-5 w-5" />;
-    }
   };
 
   const getAssetValue = () => {
@@ -108,16 +116,11 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
       case "Stocks":
         return Number(asset.units) * Number(asset.currentPrice) || 0;
       case "Crypto":
-        return (
-          Number(asset.cryptoUnits) * Number(asset.cryptoCurrentPrice) || 0
-        );
+        return Number(asset.cryptoUnits) * Number(asset.cryptoCurrentPrice) || 0;
       case "Gold":
         return Number(asset.weight) * Number(asset.goldCurrentPrice) || 0;
       case "Property":
-        return (
-          Number(asset.marketValue) * (Number(asset.ownershipPercent) / 100) ||
-          0
-        );
+        return Number(asset.marketValue) * (Number(asset.ownershipPercent) / 100) || 0;
       default:
         return Number(asset.value) || 0;
     }
@@ -132,10 +135,7 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
       case "Gold":
         return Number(asset.weight) * Number(asset.goldBuyPrice) || 0;
       case "Property":
-        return (
-          Number(asset.purchasePrice) *
-            (Number(asset.ownershipPercent) / 100) || 0
-        );
+        return Number(asset.purchasePrice) * (Number(asset.ownershipPercent) / 100) || 0;
       case "Mutual Fund":
         return Number(asset.totalInvested) || 0;
       default:
@@ -155,10 +155,10 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
 
   const hasDetails = () => {
     switch (asset.type) {
+      case "Bank Account":
+        return Boolean(asset.bankName || asset.accountType || asset.interestRate);
       case "Mutual Fund":
-        return Boolean(
-          asset.investmentType || asset.monthlySIP || asset.totalInvested
-        );
+        return Boolean(asset.investmentType || asset.monthlySIP || asset.totalInvested);
       case "FD":
         return Boolean(asset.bankName || asset.compoundingFrequency);
       case "Stocks":
@@ -166,9 +166,7 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
       case "Gold":
         return Boolean(asset.goldType || asset.weight);
       case "Property":
-        return Boolean(
-          asset.propertyType || asset.location || asset.marketValue
-        );
+        return Boolean(asset.propertyType || asset.location || asset.marketValue);
       case "Crypto":
         return Boolean(asset.cryptoName || asset.cryptoUnits);
       case "Other":
@@ -178,21 +176,42 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
     }
   };
 
-  const color = getColor(asset.type);
-  const assetValue = getAssetValue();
-  const gainLoss = getGainLoss();
-  const gainLossPercentage = getGainLossPercentage();
-
-  if (editing) {
-    return (
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-slate-200 dark:border-slate-700 animate-fadeIn">
-        <AssetForm index={index} onCancel={() => setEditing(false)} />
-      </div>
-    );
-  }
-
   const renderAssetDetails = () => {
     switch (asset.type) {
+      case "Bank Account":
+        return (
+          <div className="mb-3">
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Account Details
+            </span>
+            <div className="mt-2 space-y-2">
+              <div className="flex justify-between">
+                <span className="text-sm text-slate-600 dark:text-slate-400">
+                  Bank Name
+                </span>
+                <span className="text-sm font-medium text-slate-800 dark:text-white">
+                  {asset.bankName}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-slate-600 dark:text-slate-400">
+                  Account Type
+                </span>
+                <span className="text-sm font-medium text-slate-800 dark:text-white">
+                  {asset.accountType}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-sm text-slate-600 dark:text-slate-400">
+                  Interest Rate
+                </span>
+                <span className="text-sm font-medium text-slate-800 dark:text-white">
+                  {asset.interestRate}% p.a.
+                </span>
+              </div>
+            </div>
+          </div>
+        );
       case "Mutual Fund":
         return (
           <>
@@ -231,7 +250,6 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
             </div>
           </>
         );
-
       case "FD":
         return (
           <>
@@ -285,7 +303,6 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
             </div>
           </>
         );
-
       case "Stocks":
         return (
           <>
@@ -330,7 +347,6 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
             </div>
           </>
         );
-
       case "Gold":
         return (
           <>
@@ -375,7 +391,6 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
             </div>
           </>
         );
-
       case "Property":
         return (
           <>
@@ -438,7 +453,6 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
             </div>
           </>
         );
-
       case "Crypto":
         return (
           <>
@@ -483,7 +497,6 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
             </div>
           </>
         );
-
       case "Other":
         return (
           <>
@@ -512,11 +525,23 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
             </div>
           </>
         );
-
       default:
         return null;
     }
   };
+
+  if (editing) {
+    return (
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-md p-6 border border-slate-200 dark:border-slate-700 animate-fadeIn">
+        <AssetForm index={index} onCancel={() => setEditing(false)} />
+      </div>
+    );
+  }
+
+  const color = getColor(asset.type);
+  const assetValue = getAssetValue();
+  const gainLoss = getGainLoss();
+  const gainLossPercentage = getGainLossPercentage();
 
   return (
     <div
@@ -530,7 +555,7 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
             <div
               className={`p-2 rounded-lg ${color.bg} ${color.darkBg} ${color.text} ${color.darkText} mr-3`}
             >
-              {getAssetIcon(asset.type)}
+              {getIcon(asset.type)}
             </div>
             <div>
               <h3 className="font-medium text-slate-800 dark:text-white">
@@ -641,11 +666,11 @@ const AssetCard = ({ asset, index, compact = false, isExpanded, onExpand }) => {
       )}
 
       <div className={`asset-card-details ${isExpanded ? "expanded" : ""}`}>
-        {!compact && (
+        {!compact && isExpanded && (
           <div className="p-5 border-t border-gray-200 dark:border-slate-700">
             {renderAssetDetails()}
 
-            {asset.localRule.type === "make_rule" && (
+            {asset.localRule?.type === "make_rule" && (
               <div className="mt-4 p-3 bg-slate-50 dark:bg-slate-700/50 rounded-md">
                 <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300">
                   Custom Growth Rule

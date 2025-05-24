@@ -1,6 +1,4 @@
 import React from "react";
-// import { Asset } from "../types";
-
 
 const AssetTypeFields = ({ asset, index, onChange }) => {
   const formatCurrency = (value) => {
@@ -14,6 +12,99 @@ const AssetTypeFields = ({ asset, index, onChange }) => {
 
   return (
     <div className="pt-4 animate-fadeIn">
+      {/* Bank Account Fields */}
+      {asset.type === "Bank Account" && (
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor={`bankName-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                Bank Name
+              </label>
+              <input
+                id={`bankName-${index}`}
+                type="text"
+                value={asset.bankName}
+                onChange={(e) => onChange("bankName", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+                placeholder="e.g., HDFC Bank"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor={`accountType-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                Account Type
+              </label>
+              <select
+                id={`accountType-${index}`}
+                value={asset.accountType}
+                onChange={(e) => onChange("accountType", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm 
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+              >
+                <option value="Savings">Savings Account</option>
+                <option value="Current">Current Account</option>
+                <option value="Salary">Salary Account</option>
+                <option value="Money Market">Money Market Account</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor={`value-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                Current Balance
+              </label>
+              <input
+                id={`value-${index}`}
+                type="number"
+                value={asset.value}
+                onChange={(e) => onChange("value", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+                placeholder="e.g., 50000"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor={`interestRate-${index}`}
+                className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1"
+              >
+                Interest Rate (% p.a.)
+              </label>
+              <input
+                id={`interestRate-${index}`}
+                type="number"
+                step="0.01"
+                value={asset.interestRate}
+                onChange={(e) => onChange("interestRate", e.target.value)}
+                className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm
+                  bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-400
+                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                  transition duration-200"
+                placeholder="e.g., 3.5"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Mutual Fund Fields */}
       {asset.type === "Mutual Fund" && (
         <div className="space-y-4">
